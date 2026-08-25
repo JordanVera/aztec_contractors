@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 
@@ -20,7 +21,7 @@ export function PageHero({
   size = "default",
 }: {
   eyebrow?: string;
-  title: string;
+  title: ReactNode;
   description?: string;
   image?: string;
   imageAlt?: string;

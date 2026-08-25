@@ -9,6 +9,7 @@ import {
 
 import { SiteLogo } from '@/components/site-logo';
 import { Separator } from '@/components/ui/separator';
+import { serviceAreaHref, serviceAreas } from '@/lib/service-areas';
 import { serviceCategories, getServicesByCategory } from '@/lib/services';
 import { site } from '@/lib/site';
 
@@ -110,6 +111,7 @@ export function SiteFooter() {
             {[
               { label: 'Get Free Estimate', href: '/contact' },
               { label: 'Our Services', href: '/services' },
+              { label: 'Service Areas', href: '/service-areas' },
               { label: 'Project Gallery', href: '/gallery' },
               { label: 'About Us', href: '/about' },
               { label: 'Customer Reviews', href: '/reviews' },
@@ -136,20 +138,19 @@ export function SiteFooter() {
             <p className="pt-2 text-xs font-medium text-foreground/60">
               Serving Greater Houston:
             </p>
-            {[
-              'Houston',
-              'Katy',
-              'Sugar Land',
-              'Pearland',
-              'The Woodlands',
-              'Pasadena',
-              'League City',
-            ].map((city) => (
-              <p key={city} className="flex items-center gap-1.5 text-xs">
-                <span className="size-1 rounded-full bg-primary/50 shrink-0" />
-                {city}
-              </p>
-            ))}
+            <ul className="space-y-1.5">
+              {serviceAreas.map((area) => (
+                <li key={area.slug}>
+                  <Link
+                    href={serviceAreaHref(area.slug)}
+                    className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    <span className="size-1 shrink-0 rounded-full bg-primary/50" />
+                    {area.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

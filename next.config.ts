@@ -1,6 +1,8 @@
 import path from 'node:path';
 import type { NextConfig } from 'next';
 
+import { serviceAreaLegacyRedirects } from './src/lib/service-areas';
+
 const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
@@ -29,6 +31,23 @@ const nextConfig: NextConfig = {
         source: '/services/outdoor-construction',
         destination: '/services',
         permanent: true,
+      },
+      ...serviceAreaLegacyRedirects.map((redirect) => ({
+        ...redirect,
+        permanent: true,
+      })),
+      {
+        source: '/service-areas/:slug',
+        destination: '/roofing-contractor-in-:slug',
+        permanent: true,
+      },
+    ];
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/roofing-contractor-in-:slug',
+        destination: '/service-areas/:slug',
       },
     ];
   },

@@ -1,3 +1,4 @@
+import { serviceAreas } from '@/lib/service-areas';
 import { reviews } from '@/lib/services';
 import { site } from '@/lib/site';
 
@@ -34,10 +35,13 @@ export function LocalBusinessJsonLd() {
       postalCode: site.address.zip,
       addressCountry: 'US',
     },
-    areaServed: {
-      '@type': 'City',
-      name: 'Houston',
-    },
+    areaServed: [
+      { '@type': 'City', name: 'Houston' },
+      ...serviceAreas.map((area) => ({
+        '@type': 'City',
+        name: area.name,
+      })),
+    ],
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: '5',

@@ -30,6 +30,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { serviceAreaHref, serviceAreas } from '@/lib/service-areas';
 import { getServicesByCategory, serviceCategories } from '@/lib/services';
 import { nav, site } from '@/lib/site';
 import { cn } from '@/lib/utils';
@@ -49,6 +50,9 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const servicesActive = isNavActive(pathname, '/services');
+  const areasActive =
+    pathname === '/service-areas' ||
+    pathname.startsWith('/roofing-contractor-in-');
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/95 backdrop-blur-md">
@@ -111,6 +115,50 @@ export function SiteHeader() {
                               className="block text-center text-sm font-semibold text-primary"
                             >
                               View all services
+                            </Link>
+                          </NavigationMenuLink>
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  );
+                }
+
+                if (item.label === 'Service Areas') {
+                  return (
+                    <NavigationMenuItem key={item.href}>
+                      <NavigationMenuTrigger
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          'h-auto bg-transparent px-3 py-1.5 hover:bg-transparent focus:bg-transparent data-open:bg-transparent data-popup-open:bg-transparent',
+                          areasActive
+                            ? 'text-primary'
+                            : 'text-foreground/70 hover:text-foreground',
+                        )}
+                      >
+                        Service Areas
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid w-md grid-cols-2 gap-1 p-3">
+                          {serviceAreas.map((area) => (
+                            <li key={area.slug}>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  href={serviceAreaHref(area.slug)}
+                                  className="block rounded-md px-2 py-1.5 text-sm text-foreground/80 hover:text-foreground"
+                                >
+                                  {area.name}
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="border-t border-border px-4 py-3">
+                          <NavigationMenuLink asChild>
+                            <Link
+                              href="/service-areas"
+                              className="block text-center text-sm font-semibold text-primary"
+                            >
+                              View all service areas
                             </Link>
                           </NavigationMenuLink>
                         </div>
@@ -195,61 +243,117 @@ export function SiteHeader() {
               <nav className="flex flex-col gap-0.5 px-4 pb-8 pt-4">
                 {nav
                   .filter((i) => i.label !== 'Free Estimate')
-                  .map((item) =>
-                    item.label === 'Services' ? (
-                      <Accordion
-                        key={item.href}
-                        type="single"
-                        collapsible
-                        defaultValue={servicesActive ? 'services' : undefined}
-                      >
-                        <AccordionItem value="services" className="border-none">
-                          <AccordionTrigger
-                            className={cn(
-                              'rounded-lg px-3 py-2.5 hover:no-underline',
-                              servicesActive
-                                ? 'bg-primary/10 text-primary'
-                                : 'text-foreground hover:bg-muted',
-                            )}
+                  .map((item) => {
+                    if (item.label === 'Services') {
+                      return (
+                        <Accordion
+                          key={item.href}
+                          type="single"
+                          collapsible
+                          defaultValue={servicesActive ? 'services' : undefined}
+                        >
+                          <AccordionItem
+                            value="services"
+                            className="border-none"
                           >
-                            Services
-                          </AccordionTrigger>
-                          <AccordionContent className="pb-1 [&_a]:no-underline">
-                            <Link
-                              href="/services"
-                              onClick={() => setOpen(false)}
-                              className="mb-1 block rounded-lg px-3 py-2 text-sm font-medium text-primary"
+                            <AccordionTrigger
+                              className={cn(
+                                'rounded-lg px-3 py-2.5 hover:no-underline',
+                                servicesActive
+                                  ? 'bg-primary/10 text-primary'
+                                  : 'text-foreground hover:bg-muted',
+                              )}
                             >
-                              All services
-                            </Link>
-                            {serviceCategories.map((category) => (
-                              <div key={category.id} className="mt-2">
-                                <p className="px-3 pb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
-                                  {category.name}
-                                </p>
-                                {getServicesByCategory(category.id).map(
-                                  (service) => (
-                                    <Link
-                                      key={service.slug}
-                                      href={`/services/${service.slug}`}
-                                      onClick={() => setOpen(false)}
-                                      className={cn(
-                                        'block rounded-lg px-3 py-2 text-sm transition-colors',
-                                        pathname === `/services/${service.slug}`
-                                          ? 'bg-primary/10 text-primary'
-                                          : 'text-foreground/80 hover:bg-muted hover:text-foreground',
-                                      )}
-                                    >
-                                      {service.name}
-                                    </Link>
-                                  ),
-                                )}
-                              </div>
-                            ))}
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-                    ) : (
+                              Services
+                            </AccordionTrigger>
+                            <AccordionContent className="pb-1 [&_a]:no-underline">
+                              <Link
+                                href="/services"
+                                onClick={() => setOpen(false)}
+                                className="mb-1 block rounded-lg px-3 py-2 text-sm font-medium text-primary"
+                              >
+                                All services
+                              </Link>
+                              {serviceCategories.map((category) => (
+                                <div key={category.id} className="mt-2">
+                                  <p className="px-3 pb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                                    {category.name}
+                                  </p>
+                                  {getServicesByCategory(category.id).map(
+                                    (service) => (
+                                      <Link
+                                        key={service.slug}
+                                        href={`/services/${service.slug}`}
+                                        onClick={() => setOpen(false)}
+                                        className={cn(
+                                          'block rounded-lg px-3 py-2 text-sm transition-colors',
+                                          pathname ===
+                                            `/services/${service.slug}`
+                                            ? 'bg-primary/10 text-primary'
+                                            : 'text-foreground/80 hover:bg-muted hover:text-foreground',
+                                        )}
+                                      >
+                                        {service.name}
+                                      </Link>
+                                    ),
+                                  )}
+                                </div>
+                              ))}
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      );
+                    }
+
+                    if (item.label === 'Service Areas') {
+                      return (
+                        <Accordion
+                          key={item.href}
+                          type="single"
+                          collapsible
+                          defaultValue={areasActive ? 'areas' : undefined}
+                        >
+                          <AccordionItem value="areas" className="border-none">
+                            <AccordionTrigger
+                              className={cn(
+                                'rounded-lg px-3 py-2.5 hover:no-underline',
+                                areasActive
+                                  ? 'bg-primary/10 text-primary'
+                                  : 'text-foreground hover:bg-muted',
+                              )}
+                            >
+                              Service Areas
+                            </AccordionTrigger>
+                            <AccordionContent className="pb-1 [&_a]:no-underline">
+                              <Link
+                                href="/service-areas"
+                                onClick={() => setOpen(false)}
+                                className="mb-1 block rounded-lg px-3 py-2 text-sm font-medium text-primary"
+                              >
+                                All service areas
+                              </Link>
+                              {serviceAreas.map((area) => (
+                                <Link
+                                  key={area.slug}
+                                  href={serviceAreaHref(area.slug)}
+                                  onClick={() => setOpen(false)}
+                                  className={cn(
+                                    'block rounded-lg px-3 py-2 text-sm transition-colors',
+                                    pathname === serviceAreaHref(area.slug)
+                                      ? 'bg-primary/10 text-primary'
+                                      : 'text-foreground/80 hover:bg-muted hover:text-foreground',
+                                  )}
+                                >
+                                  {area.name}
+                                </Link>
+                              ))}
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      );
+                    }
+
+                    return (
                       <Link
                         key={item.href}
                         href={item.href}
@@ -263,8 +367,8 @@ export function SiteHeader() {
                       >
                         {item.label}
                       </Link>
-                    ),
-                  )}
+                    );
+                  })}
               </nav>
             </SheetContent>
           </Sheet>

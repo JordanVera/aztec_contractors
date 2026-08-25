@@ -17,7 +17,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t-2 border-primary/30 bg-card">
       <div className="mx-auto max-w-6xl px-4 md:px-6">
-        <div className="flex flex-wrap items-center gap-x-8 gap-y-3 border-b border-border py-5">
+        <div className="text-muted-foreground flex flex-wrap items-center gap-x-8 gap-y-3 border-b border-border py-5">
           {site.badges.map((badge) => (
             <div
               key={badge}

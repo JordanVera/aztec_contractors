@@ -86,8 +86,8 @@ export function HeroKenBurns({ images }: { images: GalleryImage[] }) {
           </div>
         );
       })}
-      <div className="absolute inset-0 bg-linear-to-r from-black/82 via-black/62 to-black/38" />
-      <div className="absolute inset-0 bg-linear-to-t from-background via-background/25 to-black/30" />
+      <div className="absolute inset-0 bg-linear-to-r from-black/86 via-black/68 to-black/42" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/15 to-black/25" />
     </div>
   );
 }

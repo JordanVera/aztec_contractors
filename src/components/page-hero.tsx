@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import type { ReactNode } from "react";
-import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import type { ReactNode } from 'react';
+import Image from 'next/image';
+import { motion, useReducedMotion } from 'framer-motion';
 
-import { Reveal } from "@/components/motion";
-import { cn } from "@/lib/utils";
+import { Reveal } from '@/components/motion';
+import { cn } from '@/lib/utils';
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -18,7 +18,7 @@ export function PageHero({
   children,
   trustRow,
   compact = false,
-  size = "default",
+  size = 'default',
 }: {
   eyebrow?: string;
   title: ReactNode;
@@ -28,7 +28,7 @@ export function PageHero({
   children?: React.ReactNode;
   trustRow?: React.ReactNode;
   compact?: boolean;
-  size?: "default" | "lg";
+  size?: 'default' | 'lg';
 }) {
   const reduce = useReducedMotion();
 
@@ -43,7 +43,7 @@ export function PageHero({
         >
           <Image
             src={image}
-            alt={imageAlt ?? ""}
+            alt={imageAlt ?? ''}
             fill
             priority
             sizes="100vw"
@@ -53,23 +53,23 @@ export function PageHero({
       ) : null}
       <div
         className={cn(
-          "absolute inset-0",
+          'absolute inset-0',
           image
-            ? "bg-linear-to-r from-black/92 via-black/70 to-black/30"
-            : "bg-card"
+            ? 'bg-linear-to-r from-black/92 via-black/70 to-black/30'
+            : 'bg-card',
         )}
       />
-      {image && (
-        <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-background/60" />
-      )}
+      {image ? (
+        <div className="absolute inset-0 bg-linear-to-t from-black/45 via-transparent to-black/20" />
+      ) : null}
       <div
         className={cn(
-          "relative mx-auto max-w-6xl px-4 md:px-6",
-          size === "lg"
-            ? "py-28 md:py-44"
+          'relative mx-auto max-w-6xl px-4 md:px-6',
+          size === 'lg'
+            ? 'py-28 md:py-44'
             : compact
-              ? "py-16 md:py-20"
-              : "py-20 md:py-28"
+              ? 'py-16 md:py-20'
+              : 'py-20 md:py-28',
         )}
       >
         {eyebrow ? (
@@ -82,8 +82,8 @@ export function PageHero({
         <Reveal delay={0.08}>
           <h1
             className={cn(
-              "max-w-3xl font-heading text-4xl font-bold tracking-tight text-balance md:text-5xl lg:text-6xl",
-              image && "text-white"
+              'max-w-3xl font-heading text-4xl font-bold tracking-tight text-balance md:text-5xl lg:text-6xl',
+              image && 'text-white',
             )}
           >
             {title}
@@ -93,8 +93,8 @@ export function PageHero({
           <Reveal delay={0.16}>
             <p
               className={cn(
-                "mt-5 max-w-2xl text-base leading-relaxed md:text-lg",
-                image ? "text-zinc-200" : "text-muted-foreground"
+                'mt-5 max-w-2xl text-base leading-relaxed md:text-lg',
+                image ? 'text-zinc-200' : 'text-muted-foreground',
               )}
             >
               {description}

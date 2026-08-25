@@ -15,6 +15,7 @@ import {
 
 import { FadeIn, Stagger, StaggerItem } from '@/components/motion';
 import { GalleryGrid } from '@/components/gallery-grid';
+import { HeroKenBurns } from '@/components/hero-ken-burns';
 import { Section, SectionHeading } from '@/components/section';
 import { ServiceCategorySection } from '@/components/service-category-section';
 import { ReviewCard } from '@/components/review-card';
@@ -22,7 +23,11 @@ import { VideoShowcase } from '@/components/video-showcase';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { LeadForm } from '@/components/lead-form';
-import { featuredGalleryImages, galleryImages } from '@/lib/gallery';
+import {
+  featuredGalleryImages,
+  galleryImages,
+  heroGalleryImages,
+} from '@/lib/gallery';
 import { reviews } from '@/lib/services';
 import { site } from '@/lib/site';
 
@@ -59,16 +64,19 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <div className="relative overflow-hidden border-b border-border hero-gradient">
-        <div className="pointer-events-none absolute inset-0 stripe-pattern opacity-40" />
+      <div className="relative overflow-hidden border-b border-border">
+        <HeroKenBurns images={heroGalleryImages} />
         <div className="relative mx-auto max-w-6xl px-4 py-24 md:px-6 md:py-40">
           <FadeIn>
             <div className="mb-6 flex flex-wrap items-center gap-3">
-              <Badge className="bg-primary/15 border-primary/30 text-primary hover:bg-primary/20">
+              <Badge className="border-white/20 bg-white/12 text-white hover:bg-white/18">
                 <BadgeCheckIcon className="mr-1.5 size-3" />
                 A+ BBB Rating
               </Badge>
-              <Badge variant="outline" className="text-muted-foreground">
+              <Badge
+                variant="outline"
+                className="border-white/20 bg-transparent text-white/90"
+              >
                 <StarIcon className="mr-1 size-3 fill-amber-400 text-amber-400" />
                 Google Rated · 18+ Years · Houston TX
               </Badge>
@@ -76,7 +84,7 @@ export default function HomePage() {
           </FadeIn>
 
           <FadeIn delay={0.06}>
-            <h1 className="max-w-4xl font-heading text-4xl font-bold tracking-tight text-balance md:text-6xl lg:text-7xl">
+            <h1 className="max-w-4xl font-heading text-4xl font-bold tracking-tight text-balance text-white md:text-6xl lg:text-7xl">
               Houston&apos;s trusted{' '}
               <span className="text-primary">general contractor</span> since{' '}
               {site.founded}.
@@ -84,11 +92,11 @@ export default function HomePage() {
           </FadeIn>
 
           <FadeIn delay={0.12}>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
               Roofing, remodeling, building additions, and insurance claim
               specialists. Family-owned and operated by Reynaldo &amp; Valeria
               Serenil — over{' '}
-              <strong className="font-semibold text-foreground">
+              <strong className="font-semibold text-white">
                 5,000 completed projects
               </strong>{' '}
               across the greater Houston area.
@@ -105,7 +113,7 @@ export default function HomePage() {
             <Button
               asChild
               variant="outline"
-              className="h-12 px-6 text-base font-medium"
+              className="h-12 border-white/30 bg-white/10 px-6 text-base font-medium text-white hover:bg-white/20 hover:text-white"
             >
               <a href={site.phoneHref}>
                 <PhoneIcon className="size-4" />
@@ -118,7 +126,7 @@ export default function HomePage() {
             {site.badges.map((b) => (
               <span
                 key={b}
-                className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
+                className="flex items-center gap-1.5 text-xs font-medium text-white/75"
               >
                 <CheckCircleIcon className="size-3.5 text-primary" />
                 {b}

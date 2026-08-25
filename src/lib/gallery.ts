@@ -482,3 +482,16 @@ export const galleryHeroImage = galleryImages.find(
   (image) => image.src === '/images/gallery/015.jpg',
 )!;
 
+/** Landscape-friendly hero slides: finished interiors, roofing, and exteriors. */
+export const heroGallerySrcs = [
+  '/images/gallery/015.jpg',
+  '/images/gallery/044.jpg',
+  '/images/gallery/024.jpg',
+  '/images/gallery/035.jpg',
+  '/images/gallery/027.jpg',
+] as const;
+
+export const heroGalleryImages = heroGallerySrcs.map(
+  (src) => galleryImages.find((image) => image.src === src)!,
+);
+

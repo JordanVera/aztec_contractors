@@ -3,9 +3,26 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { MenuIcon, PhoneIcon, XIcon, StarIcon } from 'lucide-react';
+import { MenuIcon, PhoneIcon, XIcon } from 'lucide-react';
 
+import { SiteLogo } from '@/components/site-logo';
+import { ThemeToggle } from '@/components/theme-toggle';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu';
 import {
   Sheet,
   SheetContent,
@@ -13,71 +30,130 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { getServicesByCategory, serviceCategories } from '@/lib/services';
 import { nav, site } from '@/lib/site';
+import { cn } from '@/lib/utils';
+
+function isNavActive(pathname: string, href: string) {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+const linkClass = (active: boolean) =>
+  cn(
+    'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+    active ? 'text-primary' : 'text-foreground/70 hover:text-foreground',
+  );
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const servicesActive = isNavActive(pathname, '/services');
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/95 backdrop-blur-md">
-      {/* Trust bar */}
-      <div className="border-b border-primary/20 bg-primary/8">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 text-xs md:px-6">
-          <div className="flex items-center gap-4 text-muted-foreground">
-            <span className="flex items-center gap-1 font-semibold text-foreground/80">
-              <StarIcon className="size-3 fill-amber-400 text-amber-400" />
-              <StarIcon className="size-3 fill-amber-400 text-amber-400" />
-              <StarIcon className="size-3 fill-amber-400 text-amber-400" />
-              <StarIcon className="size-3 fill-amber-400 text-amber-400" />
-              <StarIcon className="size-3 fill-amber-400 text-amber-400" />
-              <span className="ml-1">Google Rated</span>
-            </span>
-            <span className="hidden text-muted-foreground md:block">
-              A+ BBB · Licensed & Insured · Est. {site.founded}
-            </span>
-          </div>
-          <a
-            href={site.phoneHref}
-            className="hidden shrink-0 font-semibold text-foreground/80 transition-colors hover:text-primary md:block"
-          >
-            {site.phone}
-          </a>
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-4 px-4 md:px-6">
+        <SiteLogo size="lg" priority />
+
+        <div className="hidden items-center gap-3 lg:flex">
+          <NavigationMenu viewport={false}>
+            <NavigationMenuList>
+              {nav.map((item) => {
+                if (item.label === 'Services') {
+                  return (
+                    <NavigationMenuItem key={item.href}>
+                      <NavigationMenuTrigger
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          'h-auto bg-transparent px-3 py-1.5 hover:bg-transparent focus:bg-transparent data-open:bg-transparent data-popup-open:bg-transparent',
+                          servicesActive
+                            ? 'text-primary'
+                            : 'text-foreground/70 hover:text-foreground',
+                        )}
+                      >
+                        Services
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div className="grid w-136 grid-cols-2 gap-6 p-4">
+                          {serviceCategories.map((category) => (
+                            <div key={category.id}>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  href={`/services#${category.id}`}
+                                  className="mb-1 block rounded-md px-2 py-1.5 text-xs font-semibold tracking-widest text-primary uppercase"
+                                >
+                                  {category.name}
+                                </Link>
+                              </NavigationMenuLink>
+                              <ul className="flex flex-col">
+                                {getServicesByCategory(category.id).map(
+                                  (service) => (
+                                    <li key={service.slug}>
+                                      <NavigationMenuLink asChild>
+                                        <Link
+                                          href={`/services/${service.slug}`}
+                                          className="block rounded-md px-2 py-1.5 text-sm text-foreground/80 hover:text-foreground"
+                                        >
+                                          {service.name}
+                                        </Link>
+                                      </NavigationMenuLink>
+                                    </li>
+                                  ),
+                                )}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="border-t border-border px-4 py-3">
+                          <NavigationMenuLink asChild>
+                            <Link
+                              href="/services"
+                              className="block text-center text-sm font-semibold text-primary"
+                            >
+                              View all services
+                            </Link>
+                          </NavigationMenuLink>
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  );
+                }
+
+                if (item.label === 'Free Estimate') {
+                  return (
+                    <NavigationMenuItem key={item.href}>
+                      <NavigationMenuLink asChild>
+                        <Link
+                          href={item.href}
+                          className="ml-2 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+                        >
+                          {item.label}
+                        </Link>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  );
+                }
+
+                return (
+                  <NavigationMenuItem key={item.href}>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={item.href}
+                        className={linkClass(isNavActive(pathname, item.href))}
+                      >
+                        {item.label}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                );
+              })}
+            </NavigationMenuList>
+          </NavigationMenu>
+          <ThemeToggle />
         </div>
-      </div>
-
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 md:px-6">
-        <Link href="/" className="shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-9 items-center justify-center rounded-lg warm-gradient">
-              <span className="text-sm font-black text-white">AC</span>
-            </div>
-            <div className="leading-tight">
-              <p className="text-base font-bold tracking-tight">Aztec Contractors</p>
-              <p className="text-[10px] font-medium tracking-widest text-muted-foreground uppercase">Houston, TX</p>
-            </div>
-          </div>
-        </Link>
-
-        <nav className="hidden items-center gap-0.5 lg:flex">
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                item.label === 'Free Estimate'
-                  ? 'bg-primary text-white hover:bg-primary/90 ml-2'
-                  : pathname === item.href
-                  ? 'text-primary'
-                  : 'text-foreground/70 hover:text-foreground'
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
 
         <div className="flex items-center gap-2 lg:hidden">
+          <ThemeToggle />
           <a
             href={site.phoneHref}
             className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm font-semibold transition-colors hover:bg-muted sm:flex"
@@ -88,14 +164,17 @@ export function SiteHeader() {
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" aria-label="Open menu">
-                {open ? <XIcon className="size-4" /> : <MenuIcon className="size-4" />}
+                {open ? (
+                  <XIcon className="size-4" />
+                ) : (
+                  <MenuIcon className="size-4" />
+                )}
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-80">
               <SheetHeader className="pb-2">
                 <SheetTitle>
-                  <span className="font-bold text-primary">Aztec</span>
-                  <span className="ml-1 font-bold">Contractors</span>
+                  <SiteLogo size="sm" />
                 </SheetTitle>
               </SheetHeader>
               <div className="px-4 pb-2">
@@ -114,20 +193,78 @@ export function SiteHeader() {
                 </a>
               </div>
               <nav className="flex flex-col gap-0.5 px-4 pb-8 pt-4">
-                {nav.filter((i) => i.label !== 'Free Estimate').map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                      pathname === item.href
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-foreground hover:bg-muted'
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {nav
+                  .filter((i) => i.label !== 'Free Estimate')
+                  .map((item) =>
+                    item.label === 'Services' ? (
+                      <Accordion
+                        key={item.href}
+                        type="single"
+                        collapsible
+                        defaultValue={servicesActive ? 'services' : undefined}
+                      >
+                        <AccordionItem value="services" className="border-none">
+                          <AccordionTrigger
+                            className={cn(
+                              'rounded-lg px-3 py-2.5 hover:no-underline',
+                              servicesActive
+                                ? 'bg-primary/10 text-primary'
+                                : 'text-foreground hover:bg-muted',
+                            )}
+                          >
+                            Services
+                          </AccordionTrigger>
+                          <AccordionContent className="pb-1 [&_a]:no-underline">
+                            <Link
+                              href="/services"
+                              onClick={() => setOpen(false)}
+                              className="mb-1 block rounded-lg px-3 py-2 text-sm font-medium text-primary"
+                            >
+                              All services
+                            </Link>
+                            {serviceCategories.map((category) => (
+                              <div key={category.id} className="mt-2">
+                                <p className="px-3 pb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+                                  {category.name}
+                                </p>
+                                {getServicesByCategory(category.id).map(
+                                  (service) => (
+                                    <Link
+                                      key={service.slug}
+                                      href={`/services/${service.slug}`}
+                                      onClick={() => setOpen(false)}
+                                      className={cn(
+                                        'block rounded-lg px-3 py-2 text-sm transition-colors',
+                                        pathname === `/services/${service.slug}`
+                                          ? 'bg-primary/10 text-primary'
+                                          : 'text-foreground/80 hover:bg-muted hover:text-foreground',
+                                      )}
+                                    >
+                                      {service.name}
+                                    </Link>
+                                  ),
+                                )}
+                              </div>
+                            ))}
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    ) : (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        className={cn(
+                          'rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                          isNavActive(pathname, item.href)
+                            ? 'bg-primary/10 text-primary'
+                            : 'text-foreground hover:bg-muted',
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                    ),
+                  )}
               </nav>
             </SheetContent>
           </Sheet>

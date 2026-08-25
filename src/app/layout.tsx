@@ -5,6 +5,7 @@ import { LocalBusinessJsonLd } from '@/components/json-ld';
 import { MobileCta } from '@/components/mobile-cta';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
+import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { site } from '@/lib/site';
 
@@ -44,15 +45,23 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <LocalBusinessJsonLd />
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
-        <MobileCta />
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <LocalBusinessJsonLd />
+          <SiteHeader />
+          <main className="flex-1">{children}</main>
+          <SiteFooter />
+          <MobileCta />
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

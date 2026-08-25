@@ -79,13 +79,23 @@ export function PageHero({
           </Reveal>
         ) : null}
         <Reveal delay={0.08}>
-          <h1 className="max-w-3xl font-heading text-4xl font-bold tracking-tight text-balance md:text-5xl lg:text-6xl">
+          <h1
+            className={cn(
+              "max-w-3xl font-heading text-4xl font-bold tracking-tight text-balance md:text-5xl lg:text-6xl",
+              image && "text-white"
+            )}
+          >
             {title}
           </h1>
         </Reveal>
         {description ? (
           <Reveal delay={0.16}>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-zinc-200 md:text-lg">
+            <p
+              className={cn(
+                "mt-5 max-w-2xl text-base leading-relaxed md:text-lg",
+                image ? "text-zinc-200" : "text-muted-foreground"
+              )}
+            >
               {description}
             </p>
           </Reveal>
